@@ -8,17 +8,16 @@ var repName = process.argv[3];
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
-//function to find all repo contributors
-
-function getRepoContributors(repoOwner, repoName, cb) {
+function getRepoContributors(repoOwner, repoName, cb) { //find all repo contributors
 
   var options = {
-    url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
+    url: 'https://api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
     headers: {
       'User-Agent': 'request',
       'Authorization': 'token ' + secrets.GITHUB_TOKEN
     }
   };
+
   if (repoOwner && repoName) {
     request.get(options, function(err, res, body) {
 
@@ -31,23 +30,21 @@ function getRepoContributors(repoOwner, repoName, cb) {
       }
     })
   } else {
-    console.log("Please include both repoOwner and repoName!!!");
+    console.log('Please include both repoOwner and repoName!!!');
   }
-};
+}
 
-//function to download an image on the local disk knowing its url
-
-function downloadImageByURL(url, filePath) {
+function downloadImageByURL(url, filePath) {  //download an image on the local disk knowing its url
 
   request.get(url)
   .on('error', function (err) {
     throw err;
   })
   .on('response', function (response) {
-    console.log("Images downloaded!!");
+    console.log('Images downloaded!!');
   })
   .pipe(fs.createWriteStream(filePath))
-};
+}
 
 getRepoContributors(repOwner, repName, function(err, result) {
 
@@ -55,7 +52,7 @@ getRepoContributors(repOwner, repName, function(err, result) {
       console.log(err1);
     });
     for (var contr of result) {
-      var filePath = "";
+      var filePath = '';
       filePath = './avatars/' + contr.login + '.jpg';
       downloadImageByURL(contr.avatar_url, filePath);
     }
